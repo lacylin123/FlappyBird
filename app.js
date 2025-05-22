@@ -37,7 +37,14 @@ let hasLanded = false;
 let cursors;
 let hasBumped = false;
 let isGameStarted = false;
+let isGameOver = false;
+let isRestartTapped = false;
 let messageToPlayer;
+
+function gameOver(scene, message) {
+  isGameOver = true;
+  messageToPlayer.text = 'Tap or press space to restart';
+}
 
 function create() {
   const background = this.add.image(0, 0, "background").setOrigin(0, 0);
@@ -82,7 +89,7 @@ function update() {
     bird.setVelocityY(-160);
   }
 
-  if (cursors.up.isDown || cursors.space.isDown || this.input.activePointer.isDown && !hasLanded) {
+  if ((cursors.up.isDown || cursors.space.isDown || this.input.activePointer.isDown) && !hasLanded) {
     bird.setVelocityY(-160);
   }
 
@@ -103,7 +110,7 @@ function update() {
     bird.body.velocity.x = 0;
   }
 
-  if (cursors.space.isDown || this.input.activePointer.isDown && !isGameStarted) {
+  if ((cursors.space.isDown || this.input.activePointer.isDown) && !isGameStarted) {
     isGameStarted = true;
     messageToPlayer.text = 'Instructions: Press the "^" button to stay upright\nAnd don\'t hit the columns or ground';
   }
@@ -118,11 +125,19 @@ function update() {
     bird.body.velocity.x = 0;
   }
 
-  if (hasLanded || hasBumped) {
+  if ((hasLanded || hasBumped) && !isGameOver) {
+    isGameOver = true;
     messageToPlayer.text = 'Oh no! You crashed!';
+    gameOver();
   }
 
-  if (bird.x > 750) {
+  if (bird.x > 750 && !isGameOver) {
+    isGameOver = true;
     messageToPlayer.text = 'Congrats! You won!';
+    gameOver();
+  }
+
+  if (isGameOver && (cursors.space.isDown || this.input.activePointer.isDown)) {
+    location.reload();
   }
 }
