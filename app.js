@@ -74,11 +74,11 @@ function create() {
 }
 
 function update() {
-  if (cursors.up.isDown) {
+  if (cursors.up.isDown || cursors.space.isDown || this.input.activePointer.isDown) {
     bird.setVelocityY(-160);
   }
 
-  if (cursors.up.isDown && !hasLanded) {
+  if (cursors.up.isDown || cursors.space.isDown || this.input.activePointer.isDown && !hasLanded) {
     bird.setVelocityY(-160);
   }
 
@@ -99,7 +99,7 @@ function update() {
     bird.body.velocity.x = 0;
   }
 
-  if (cursors.space.isDown && !isGameStarted) {
+  if (cursors.space.isDown || this.input.activePointer.isDown && !isGameStarted) {
     isGameStarted = true;
     messageToPlayer.text = 'Instructions: Press the "^" button to stay upright\nAnd don\'t hit the columns or ground';
   }
